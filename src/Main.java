@@ -15,8 +15,11 @@ public class Main {
 
     private static void setupGame(int numPlayers){
         for (int i=0; i < numPlayers; i++){
-            players.add(new Player());
+            String name = "Player " + i;
+            players.add(new Player(name));
             decks.add(new Deck());
         }
+
+        //
     }
 }
