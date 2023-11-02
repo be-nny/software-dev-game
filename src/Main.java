@@ -8,6 +8,7 @@ public class Main {
     private static ArrayList<Player> players = new ArrayList<>();
     private static volatile ArrayList<Deck> decks = new ArrayList<>();
     private static Pack pack;
+    private static final int handSize = 4;
     public static void main(String[] args) {
         System.out.println("Enter number of players...");
         Scanner myScanner = new Scanner(System.in);
@@ -25,6 +26,20 @@ public class Main {
 
         setupGame(numberPlayers);
     }
+    private static void setupHands(){
+        for (int i = 0; i < handSize; i++) {
+            for (Player player : players) {
+                player.addCard(pack.getTopCard());
+            }
+        }
+    }
+    private static void setupDecks(){
+        while (pack.getCards().size()>0){
+            for (Deck deck: decks){
+                deck.addCard(pack.getTopCard());
+            }
+        }
+    }
     private static boolean setupPack(String packLocation, int numberPlayers) {
         try {
             pack = new Pack(packLocation, numberPlayers);
@@ -38,9 +53,11 @@ public class Main {
     private static void setupGame(int numPlayers){
         for (int i=0; i < numPlayers; i++){
             String name = "Player " + i;
-            players.add(new Player(name));
+            players.add(new Player(name, pack));
             decks.add(new Deck());
         }
+        setupHands();
+        setupDecks();
 
         // assigning discard and draw decks to players
         for (int i=0; i<decks.size(); i ++){;
