@@ -8,6 +8,7 @@ public class Card {
     public Card(int faceValue){
         this.faceValue = faceValue;
     }
+
     /**
      * @return face value of the card
      * */
