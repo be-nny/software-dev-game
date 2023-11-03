@@ -1,3 +1,7 @@
+package game;
+
+import game.Card;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
