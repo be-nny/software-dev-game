@@ -2,6 +2,7 @@ import exceptions.InvalidPackException;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -25,6 +26,12 @@ public class Main {
         }
 
         setupGame(numberPlayers);
+        Thread gameThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
     }
 
     /**
