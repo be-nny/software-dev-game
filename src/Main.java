@@ -26,6 +26,10 @@ public class Main {
 
         setupGame(numberPlayers);
     }
+
+    /**
+     * Sets up the hands for all players
+     * */
     private static void setupHands(){
         for (int i = 0; i < handSize; i++) {
             for (Player player : players) {
@@ -33,6 +37,10 @@ public class Main {
             }
         }
     }
+
+    /**
+     * Sets up all decks that are used in the game
+     * */
     private static void setupDecks(){
         while (pack.getCards().size()>0){
             for (Deck deck: decks){
@@ -40,6 +48,12 @@ public class Main {
             }
         }
     }
+
+    /**
+     * Sets up a pack from the pack text file
+     * @param packLocation absolute path to the pack text file
+     * @param numberPlayers the number of players in the game
+     * */
     private static boolean setupPack(String packLocation, int numberPlayers) {
         try {
             pack = new Pack(packLocation, numberPlayers);
@@ -50,10 +64,15 @@ public class Main {
         System.out.println("Success! Pack is valid.");
         return true;
     }
+
+    /**
+     * Sets up everything for the game to start.
+     * @param numPlayers the number of players in the game
+     * */
     private static void setupGame(int numPlayers){
         for (int i=0; i < numPlayers; i++){
             String name = "Player " + i;
-            players.add(new Player(name, pack));
+            players.add(new Player(name));
             decks.add(new Deck());
         }
         setupHands();

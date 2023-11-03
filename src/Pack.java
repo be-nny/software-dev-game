@@ -10,7 +10,14 @@ public class Pack {
     private int numberPlayers;
     private Stack<Card> cards = new Stack<>();
 
-
+    /**
+     * This creates a pack object filled with cards generated from a text file containing the face values. This should
+     * contain 8*n values where n is the number of players.
+     * @param packLocation the absolute path to the pack location
+     * @param numberPlayers the number of players in the game
+     * @throws FileNotFoundException when the path provided doesn't exist
+     * @throws InvalidPackException when the pack provided is invalid
+     * */
     public Pack(String packLocation, int numberPlayers) throws FileNotFoundException, InvalidPackException {
         this.packLocation = packLocation;
         this.numberPlayers = numberPlayers;
@@ -21,6 +28,11 @@ public class Pack {
         }
     }
 
+    /**
+     * Method checks the pack text file if its valid or not.
+     * @return boolean depending on if the pack is valid
+     * @throws FileNotFoundException whne the path to the pack file cannot be found
+     * */
     private boolean isValidPack() throws FileNotFoundException {
         File myObj = new File(this.packLocation);
         Scanner myReader = new Scanner(myObj);
@@ -33,6 +45,10 @@ public class Pack {
         return count == 8 * this.numberPlayers;
     }
 
+    /**
+     * Once the pack is deemed valid, the pack is filled with cards generated from the pack text file.
+     * @throws FileNotFoundException if the path to the pack text file cannot be found
+     * */
     private void create() throws FileNotFoundException {
         File myObj = new File(this.packLocation);
         Scanner myReader = new Scanner(myObj);
@@ -44,9 +60,17 @@ public class Pack {
         }
         myReader.close();
     }
+
+    /**
+     * @return {@link Stack<Card>} of the cards in the pack
+     * */
     public Stack<Card> getCards(){
         return this.cards;
     }
+
+    /**
+     * @return the top card of the pack
+     * */
     public Card getTopCard(){
         return this.cards.pop();
     }
