@@ -40,7 +40,6 @@ public class Deck {
                 lock.unlock();
             }
         }
-
         return card;
     }
 
