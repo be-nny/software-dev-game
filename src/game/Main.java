@@ -1,8 +1,9 @@
+package game;
+
 import exceptions.InvalidPackException;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -68,7 +69,7 @@ public class Main {
             System.out.println(e.getMessage());
             return false;
         }
-        System.out.println("Success! Pack is valid.");
+        System.out.println("Success! game.Pack is valid.");
         return true;
     }
 
@@ -78,7 +79,7 @@ public class Main {
      * */
     private static void setupGame(int numPlayers){
         for (int i=0; i < numPlayers; i++){
-            String name = "Player " + i;
+            String name = "game.Player " + i;
             players.add(new Player(name));
             decks.add(new Deck());
         }

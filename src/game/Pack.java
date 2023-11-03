@@ -1,3 +1,5 @@
+package game;
+
 import exceptions.InvalidPackException;
 
 import java.io.File;
@@ -22,7 +24,7 @@ public class Pack {
         this.packLocation = packLocation;
         this.numberPlayers = numberPlayers;
         if (!isValidPack()) {
-            throw new InvalidPackException("Pack file doesn't have enough lines!");
+            throw new InvalidPackException("game.Pack file doesn't have enough lines!");
         } else{
             this.create();
         }
