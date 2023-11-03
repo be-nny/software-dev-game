@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Player {
@@ -6,14 +9,22 @@ public class Player {
     private int drawDeckPointer;
     private int discardDeckPointer;
     private ArrayList<Card> hand = new ArrayList<>();
+    private String outputFilePath;
 
     /**
      * @param name name of the player
      * */
     public Player(String name){
         this.name = name;
+        this.outputFilePath = this.name + "_output.txt";
     }
 
+    public void write(String line) throws IOException {
+        File file = new File(this.outputFilePath);
+        FileWriter writer = new FileWriter(file);
+        writer.write("\n"+line);
+        writer.close();
+    }
     /**
      * Adds a card to the players hand
      * @param card the card to be added to the players hand
@@ -36,5 +47,13 @@ public class Player {
      * */
     public void setDiscardDeckPointer(int pointer){
         this.discardDeckPointer = pointer;
+    }
+
+    public void drawCard(){
+
+    }
+
+    public void discardCard(){
+
     }
 }
