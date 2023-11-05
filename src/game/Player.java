@@ -53,9 +53,19 @@ public class Player {
         this.discardDeckPointer = pointer;
     }
 
+    @Override
+    public String toString(){
+        String strHand = "";
+        for (Card card: this.hand){
+            strHand += card.getFaceValue() + " ";
+        }
+        return this.name + "'s hand is " + strHand;
+    }
+
     public ArrayList<Card> getHand(){
         return this.hand;
     }
+
     public void drawCard(){
 
     }
