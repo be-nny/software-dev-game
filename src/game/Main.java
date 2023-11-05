@@ -41,7 +41,9 @@ public class Main {
                 for(Player player: players){
                     System.out.println(player.toString());
                 }
-                //TODO check win here
+                while (!isWin()){
+                    // TODO game lopgic
+                }
 
             }
         });
@@ -123,7 +125,7 @@ public class Main {
             for (Card card : player.getHand()) {
                 valueList.add(card.getFaceValue());
             }
-            if (valueList.stream().allMatch(n -> n == n)) {
+            if (valueList.stream().allMatch(valueList.get(0)::equals)) {
                 return true;
             }
         }
