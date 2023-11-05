@@ -53,6 +53,9 @@ public class Player {
         this.discardDeckPointer = pointer;
     }
 
+    public ArrayList<Card> getHand(){
+        return this.hand;
+    }
     public void drawCard(){
 
     }
