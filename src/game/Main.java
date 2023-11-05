@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Main {
     private static ArrayList<Player> players = new ArrayList<>();
@@ -15,9 +17,11 @@ public class Main {
     private static Pack pack;
     private static final int handSize = 4;
 
-    private static boolean isRunning = true;
+    private static Player winPlayer;
 
-    public static void main(String[] args) {
+    static ReentrantLock lock = new ReentrantLock();
+
+    public static void main(String[] args) throws InterruptedException {
         System.out.println("Enter number of players...");
         Scanner myScanner = new Scanner(System.in);
         int numberPlayers = myScanner.nextInt();
@@ -37,15 +41,15 @@ public class Main {
         game();
     }
 
-    public static void game(){
+    public static void game() throws InterruptedException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("-- Initial Hands --");
         for(Player player: players){
             System.out.println(player.toString());
         }
+
         while (!isWin()){
             ArrayList<Integer> actions = new ArrayList<>();
-
             for(Player player: players){
                 System.out.println("\n" + player.toString());
                 System.out.println("Pick a card to discard (1 - 4)...");
@@ -57,18 +61,27 @@ public class Main {
                 actions.add(choice);
             }
 
+            ArrayList<Thread> threadPool = new ArrayList<>();
             for(Player player: players){
-                new Thread(() -> {
-                    try {
-                        player.turn(actions.get(0));
+                threadPool.add(new Thread(() -> {
+                    synchronized (actions){
+                        try {
+                            player.turn(actions.get(0));
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                         actions.remove(actions.get(0));
-
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+                        actions.notifyAll();
                     }
-                }).start();
+                }));
+            }
+            for(Thread thread: threadPool){
+                thread.start();
+                thread.join();
             }
         }
+        System.out.println(winPlayer.getName() + " has won!");
+        System.out.println(winPlayer.toString());
     }
 
     /**
@@ -142,11 +155,12 @@ public class Main {
 
     private static boolean isWin() {
         for (Player player : players) {
-            List<Integer> valueList = new ArrayList();
+            List<Integer> valueList = new ArrayList<>();
             for (Card card : player.getHand()) {
                 valueList.add(card.getFaceValue());
             }
             if (valueList.stream().allMatch(valueList.get(0)::equals)) {
+                winPlayer = player;
                 return true;
             }
         }
