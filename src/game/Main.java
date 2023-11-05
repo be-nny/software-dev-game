@@ -34,43 +34,41 @@ public class Main {
         }
 
         setupGame(numberPlayers);
-        Thread gameThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Scanner scanner = new Scanner(System.in);
-                System.out.println("-- Initial Hands --");
-                for(Player player: players){
-                    System.out.println(player.toString());
+        game();
+    }
+
+    public static void game(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("-- Initial Hands --");
+        for(Player player: players){
+            System.out.println(player.toString());
+        }
+        while (!isWin()){
+            ArrayList<Integer> actions = new ArrayList<>();
+
+            for(Player player: players){
+                System.out.println("\n" + player.toString());
+                System.out.println("Pick a card to discard (1 - 4)...");
+                int choice = scanner.nextInt() - 1;
+                while(choice < 0 || choice > 4){
+                    System.out.println("Error :( Pick a card to discard (1 - 4)...");
+                    choice = scanner.nextInt() - 1;
                 }
-                while (!isWin()){
-                    ArrayList<Integer> actions = new ArrayList<>();
-
-                    for(Player player: players){
-                        System.out.println("\n" + player.toString());
-                        System.out.println("Pick a card to discard (1 - 4)...");
-                        int choice = scanner.nextInt() - 1;
-                        while(choice < 0 || choice > 4){
-                            System.out.println("Error :( Pick a card to discard (1 - 4)...");
-                            choice = scanner.nextInt() - 1;
-                        }
-                        actions.add(choice);
-                    }
-
-                    for(Player player: players){
-                        new Thread(() -> {
-                            try {
-                                player.turn(actions.get(0));
-                                actions.remove(actions.get(0));
-
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }).start();
-                    }
-                }
+                actions.add(choice);
             }
-        });
-        gameThread.start();
+
+            for(Player player: players){
+                new Thread(() -> {
+                    try {
+                        player.turn(actions.get(0));
+                        actions.remove(actions.get(0));
+
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).start();
+            }
+        }
     }
 
     /**
