@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Main {
     private static ArrayList<Player> players = new ArrayList<>();
@@ -14,17 +15,20 @@ public class Main {
     private static Pack pack;
     private static final int handSize = 4;
 
+    private static boolean isRunning = true;
+
     public static void main(String[] args) {
         System.out.println("Enter number of players...");
         Scanner myScanner = new Scanner(System.in);
         int numberPlayers = myScanner.nextInt();
         myScanner = new Scanner(System.in);
 
-        System.out.println("Enter location of pack");
+        System.out.println("Enter location of pack...");
         String packLocation = myScanner.nextLine();
         boolean isValidPack = setupPack(packLocation, numberPlayers);
-        while (!isValidPack) {
-            System.out.println("\nEnter location of pack");
+      
+        while(!isValidPack){
+            System.out.println("\nEnter location of pack...");
             packLocation = myScanner.nextLine();
             isValidPack = setupPack(packLocation, numberPlayers);
         }
@@ -33,9 +37,15 @@ public class Main {
         Thread gameThread = new Thread(new Runnable() {
             @Override
             public void run() {
+                System.out.println("-- Initial Hands --");
+                for(Player player: players){
+                    System.out.println(player.toString());
+                }
+                //TODO check win here
 
             }
         });
+        gameThread.start();
     }
 
     /**
@@ -73,7 +83,7 @@ public class Main {
             System.out.println(e.getMessage());
             return false;
         }
-        System.out.println("Success! game.Pack is valid.");
+        System.out.println("Success! Pack is valid.");
         return true;
     }
 
@@ -81,10 +91,10 @@ public class Main {
      * Sets up everything for the game to start.
      *
      * @param numPlayers the number of players in the game
-     */
-    private static void setupGame(int numPlayers) {
-        for (int i = 0; i < numPlayers; i++) {
-            String name = "game.Player " + i;
+     * */
+    private static void setupGame(int numPlayers){
+        for (int i=1; i < numPlayers+1; i++){
+            String name = "Player " + i;
             players.add(new Player(name));
             decks.add(new Deck());
         }
