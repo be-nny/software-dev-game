@@ -48,7 +48,7 @@ public class Deck {
      * @throws InterruptedException if the {@link ReentrantLock ReentrantLock} can't be obtained for the deck
      * @implNote This is thread safe
      * */
-    public void add(Card card) throws InterruptedException {
+    public void discard(Card card) throws InterruptedException {
         boolean isDeckAvailable = lock.tryLock(1, TimeUnit.SECONDS);
         if(isDeckAvailable) {
             lock.lock();

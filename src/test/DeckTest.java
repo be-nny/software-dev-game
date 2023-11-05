@@ -5,8 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import game.*;
 
-import java.util.ArrayList;
-
 public class DeckTest {
     private static Deck deck;
 
@@ -40,7 +38,7 @@ public class DeckTest {
     }
     @Test
     public void addTest() throws InterruptedException{
-        deck.add(card7);
+        deck.discard(card7);
         for (int i=0; i<5; i++){
             deck.draw();
         }
