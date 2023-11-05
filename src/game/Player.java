@@ -62,6 +62,10 @@ public class Player {
         return this.name + "'s hand is " + strHand;
     }
 
+    public ArrayList<Card> getHand(){
+        return this.hand;
+    }
+
     public void drawCard(){
 
     }

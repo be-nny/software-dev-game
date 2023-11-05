@@ -4,6 +4,8 @@ import exceptions.InvalidPackException;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -14,6 +16,7 @@ public class Main {
     private static final int handSize = 4;
 
     private static boolean isRunning = true;
+
     public static void main(String[] args) {
         System.out.println("Enter number of players...");
         Scanner myScanner = new Scanner(System.in);
@@ -23,6 +26,7 @@ public class Main {
         System.out.println("Enter location of pack...");
         String packLocation = myScanner.nextLine();
         boolean isValidPack = setupPack(packLocation, numberPlayers);
+      
         while(!isValidPack){
             System.out.println("\nEnter location of pack...");
             packLocation = myScanner.nextLine();
@@ -46,8 +50,8 @@ public class Main {
 
     /**
      * Sets up the hands for all players
-     * */
-    private static void setupHands(){
+     */
+    private static void setupHands() {
         for (int i = 0; i < handSize; i++) {
             for (Player player : players) {
                 player.addCard(pack.getTopCard());
@@ -57,10 +61,10 @@ public class Main {
 
     /**
      * Sets up all decks that are used in the game
-     * */
-    private static void setupDecks(){
-        while (pack.getCards().size()>0){
-            for (Deck deck: decks){
+     */
+    private static void setupDecks() {
+        while (pack.getCards().size() > 0) {
+            for (Deck deck : decks) {
                 deck.addCard(pack.getTopCard());
             }
         }
@@ -68,9 +72,10 @@ public class Main {
 
     /**
      * Sets up a pack from the pack text file
-     * @param packLocation absolute path to the pack text file
+     *
+     * @param packLocation  absolute path to the pack text file
      * @param numberPlayers the number of players in the game
-     * */
+     */
     private static boolean setupPack(String packLocation, int numberPlayers) {
         try {
             pack = new Pack(packLocation, numberPlayers);
@@ -84,6 +89,7 @@ public class Main {
 
     /**
      * Sets up everything for the game to start.
+     *
      * @param numPlayers the number of players in the game
      * */
     private static void setupGame(int numPlayers){
@@ -96,10 +102,11 @@ public class Main {
         setupDecks();
 
         // assigning discard and draw decks to players
-        for (int i=0; i<decks.size(); i ++){;
+        for (int i = 0; i < decks.size(); i++) {
+            ;
             int discard;
-            if (i+1 < decks.size()){
-                discard = i+1;
+            if (i + 1 < decks.size()) {
+                discard = i + 1;
             } else {
                 discard = 0;
             }
@@ -108,5 +115,18 @@ public class Main {
             players.get(i).setDrawDeckPointer(i);
             players.get(i).setDiscardDeckPointer(discard);
         }
+    }
+
+    private static boolean isWin() {
+        for (Player player : players) {
+            List<Integer> valueList = new ArrayList();
+            for (Card card : player.getHand()) {
+                valueList.add(card.getFaceValue());
+            }
+            if (valueList.stream().allMatch(n -> n == n)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
