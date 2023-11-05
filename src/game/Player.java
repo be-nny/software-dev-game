@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static game.Main.decks;
+
 public class Player {
 
     private String name;
@@ -65,12 +67,10 @@ public class Player {
     public ArrayList<Card> getHand(){
         return this.hand;
     }
-
-    public void drawCard(){
-
-    }
-
-    public void discardCard(){
-
+    public void turn(int discardChoice) throws InterruptedException {
+        Card discardCard = this.hand.get(discardChoice);
+        this.hand.remove(discardCard);
+        decks.get(discardDeckPointer).discard(discardCard);
+        this.hand.add(decks.get(drawDeckPointer).draw());
     }
 }
