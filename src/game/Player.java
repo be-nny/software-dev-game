@@ -68,10 +68,15 @@ public class Player {
         return this.hand;
     }
 
-    public void turn(int discardChoice) throws InterruptedException {
+    public String getName(){
+        return this.name;
+    }
+
+    public synchronized void turn(int discardChoice) throws InterruptedException {
         Card discardCard = this.hand.get(discardChoice);
         this.hand.remove(discardCard);
         decks.get(discardDeckPointer).discard(discardCard);
         this.hand.add(decks.get(drawDeckPointer).draw());
+        notifyAll();
     }
 }
