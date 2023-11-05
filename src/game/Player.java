@@ -67,6 +67,7 @@ public class Player {
     public ArrayList<Card> getHand(){
         return this.hand;
     }
+
     public void turn(int discardChoice) throws InterruptedException {
         Card discardCard = this.hand.get(discardChoice);
         this.hand.remove(discardCard);

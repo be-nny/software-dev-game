@@ -42,9 +42,11 @@ public class Main {
                     System.out.println(player.toString());
                 }
                 while (!isWin()){
-                    // TODO game lopgic
+                    for(Player player: players){
+                        System.out.println(player.toString());
+                        System.out.println("");
+                    }
                 }
-
             }
         });
         gameThread.start();
