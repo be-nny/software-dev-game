@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Main {
     private static ArrayList<Player> players = new ArrayList<>();
-    private static volatile ArrayList<Deck> decks = new ArrayList<>();
+    public static volatile ArrayList<Deck> decks = new ArrayList<>();
     private static Pack pack;
     private static final int handSize = 4;
 
