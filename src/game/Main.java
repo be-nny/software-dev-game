@@ -4,15 +4,16 @@ import exceptions.InvalidPackException;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Main {
     private static ArrayList<Player> players = new ArrayList<>();
+    private static int numPlayers;
+    private static ExecutorService executorService;
     public static volatile ArrayList<Deck> decks = new ArrayList<>();
     private static Pack pack;
     private static final int handSize = 4;
@@ -24,20 +25,20 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
         System.out.println("Enter number of players...");
         Scanner myScanner = new Scanner(System.in);
-        int numberPlayers = myScanner.nextInt();
+        numPlayers = myScanner.nextInt();
         myScanner = new Scanner(System.in);
 
         System.out.println("Enter location of pack...");
         String packLocation = myScanner.nextLine();
-        boolean isValidPack = setupPack(packLocation, numberPlayers);
+        boolean isValidPack = setupPack(packLocation, numPlayers);
       
         while(!isValidPack){
             System.out.println("\nEnter location of pack...");
             packLocation = myScanner.nextLine();
-            isValidPack = setupPack(packLocation, numberPlayers);
+            isValidPack = setupPack(packLocation, numPlayers);
         }
 
-        setupGame(numberPlayers);
+        setupGame(numPlayers);
         game();
     }
 
@@ -50,6 +51,7 @@ public class Main {
 
         while (!isWin()){
             ArrayList<Integer> actions = new ArrayList<>();
+            executorService = Executors.newFixedThreadPool(numPlayers);
             for(Player player: players){
                 System.out.println("\n" + player.toString());
                 System.out.println("Pick a card to discard (1 - 4)...");
@@ -61,9 +63,8 @@ public class Main {
                 actions.add(choice);
             }
 
-            ArrayList<Thread> threadPool = new ArrayList<>();
             for(Player player: players){
-                threadPool.add(new Thread(() -> {
+                executorService.execute(() -> {
                     synchronized (actions){
                         try {
                             player.turn(actions.get(0));
@@ -73,12 +74,15 @@ public class Main {
                         actions.remove(actions.get(0));
                         actions.notifyAll();
                     }
-                }));
+                });
             }
-            for(Thread thread: threadPool){
-                thread.start();
-                thread.join();
+            executorService.shutdown();
+
+            System.out.println("Running round\r");
+            while (!executorService.isTerminated()){
+                System.out.print("#");
             }
+            System.out.println('\n');
         }
         System.out.println(winPlayer.getName() + " has won!");
         System.out.println(winPlayer.toString());
