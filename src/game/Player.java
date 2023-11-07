@@ -100,8 +100,8 @@ public class Player {
         Card drawCard = decks.get(this.drawDeckPointer).draw();
         this.hand.add(drawCard);
         try {
-            this.write(this.name+" draws a "+drawCard.getFaceValue()+" from deck "+this.drawDeckPointer);
-            this.write(this.name+" discards a "+discardCard.getFaceValue()+" from deck "+ this.discardDeckPointer);
+            this.write(this.name+" draws a "+drawCard.getFaceValue()+" from deck "+this.drawDeckPointer + 1);
+            this.write(this.name+" discards a "+discardCard.getFaceValue()+" from deck "+ this.discardDeckPointer + 1);
             this.write (this.name+" current hand is "+this);
         } catch (IOException e) {
             throw new RuntimeException(e);
