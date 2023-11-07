@@ -44,17 +44,17 @@ public class Main {
     }
 
     public static void game() throws InterruptedException {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("-- Initial Hands --");
+        System.out.println("-- INITIAL HANDS --");
         for(Player player: players){
             System.out.println(player.toString());
         }
 
         while (!isWin()){
             executorService = Executors.newFixedThreadPool(numPlayers);
+            System.out.println("-- NEW ROUND --");
             for(Player player: players){
                 executorService.execute(() -> {
-                    System.out.println("\n" + player.toString() + "Picking a card to discard");
+                    System.out.println(player.toString() + "Picking a card to discard");
                     int number = pickCard(player);
                     try {
                         player.turn(number);
@@ -67,7 +67,11 @@ public class Main {
 
             while (!executorService.isTerminated()){}
         }
-        System.out.println(winPlayer.getName() + " has won!");
+        System.out.println("\n-- FINAL HANDS --");
+        for(Player player: players){
+            System.out.println(player.toString());
+        }
+        System.out.println("\n" + winPlayer.getName() + " has won!");
         System.out.println(winPlayer.toString());
     }
 
