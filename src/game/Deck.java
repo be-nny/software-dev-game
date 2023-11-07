@@ -24,10 +24,9 @@ public class Deck {
     /**
      * Pops the top card from the deck.
      * @return game.Card object drawn from the top of the deck
-     * @throws InterruptedException if the {@link ReentrantLock ReentrantLock} can't be obtained for the deck
      * @implNote This is thread safe
      * */
-    public Card draw() throws InterruptedException {
+    public Card draw() {
         Card card;
         synchronized (this.deck){
             card = this.deck.get(this.deck.size()-1);
@@ -38,10 +37,9 @@ public class Deck {
 
     /**
      * Adds a card to the bottom of the deck.
-     * @throws InterruptedException if the {@link ReentrantLock ReentrantLock} can't be obtained for the deck
      * @implNote This is thread safe
      * */
-    public void discard(Card card) throws InterruptedException {
+    public void discard(Card card) {
         synchronized (this.deck){
             this.deck.add(0, card);
             this.deck.notifyAll();
