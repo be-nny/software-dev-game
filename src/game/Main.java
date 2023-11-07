@@ -3,6 +3,7 @@ package game;
 import exceptions.InvalidPackException;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -32,7 +33,7 @@ public class Main {
         System.out.println("Enter location of pack...");
         String packLocation = myScanner.nextLine();
         boolean isValidPack = setupPack(packLocation, numPlayers);
-      
+
         while(!isValidPack){
             System.out.println("\nEnter location of pack...");
             packLocation = myScanner.nextLine();
@@ -40,13 +41,17 @@ public class Main {
         }
 
         setupGame(numPlayers);
-        game();
+        try {
+            game();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static void game() throws InterruptedException {
+    public static void game() throws InterruptedException, IOException {
         System.out.println("-- INITIAL HANDS --");
         for(Player player: players){
-            System.out.println(player.toString());
+            System.out.println(player.initialise());
         }
 
         while (!isWin()){
@@ -54,7 +59,7 @@ public class Main {
             System.out.println("-- NEW ROUND --");
             for(Player player: players){
                 executorService.execute(() -> {
-                    System.out.println(player.toString());
+                    System.out.println(player.getName() + " hand "+ player.toString());
                     int number = pickCard(player);
                     try {
                         player.turn(number);
@@ -69,10 +74,18 @@ public class Main {
         }
         System.out.println("\n-- FINAL HANDS --");
         for(Player player: players){
-            System.out.println(player.toString());
+            if (player == winPlayer){
+                player.write(player.getName()+" wins");
+                player.write((player.getName()+" exits"));
+                player.write(player.getName()+" final hand "+player);
+            }else{
+                player.write(winPlayer.getName()+" has informed "+player.getName()+" that "+winPlayer.getName()+" has won");
+                player.write((player.getName()+" exits"));
+                player.write(player.getName()+" final hand "+player);
+            }
+
         }
-        System.out.println("\n" + winPlayer.getName() + " wins");
-        System.out.println(winPlayer.getName() + " exits");
+        System.out.println("\n" + winPlayer.getName() + " has won!");
         System.out.println(winPlayer.toString());
     }
 
