@@ -64,7 +64,7 @@ public class Player {
         for (Card card: this.hand){
             strHand += card.getFaceValue() + " ";
         }
-        return this.name + "'s hand is " + strHand;
+        return this.name + "'s hand: " + strHand;
     }
 
     public ArrayList<Card> getHand(){

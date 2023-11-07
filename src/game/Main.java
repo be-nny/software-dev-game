@@ -54,7 +54,7 @@ public class Main {
             System.out.println("-- NEW ROUND --");
             for(Player player: players){
                 executorService.execute(() -> {
-                    System.out.println(player.toString() + "Picking a card to discard");
+                    System.out.println(player.toString());
                     int number = pickCard(player);
                     try {
                         player.turn(number);
@@ -71,7 +71,8 @@ public class Main {
         for(Player player: players){
             System.out.println(player.toString());
         }
-        System.out.println("\n" + winPlayer.getName() + " has won!");
+        System.out.println("\n" + winPlayer.getName() + " wins");
+        System.out.println(winPlayer.getName() + " exits");
         System.out.println(winPlayer.toString());
     }
 
