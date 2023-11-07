@@ -5,6 +5,7 @@ import exceptions.InvalidPackException;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -50,42 +51,41 @@ public class Main {
         }
 
         while (!isWin()){
-            ArrayList<Integer> actions = new ArrayList<>();
             executorService = Executors.newFixedThreadPool(numPlayers);
             for(Player player: players){
-                System.out.println("\n" + player.toString());
-                System.out.println("Pick a card to discard (1 - 4)...");
-                int choice = scanner.nextInt() - 1;
-                while(choice < 0 || choice > 4){
-                    System.out.println("Error :( Pick a card to discard (1 - 4)...");
-                    choice = scanner.nextInt() - 1;
-                }
-                actions.add(choice);
-            }
-
-            for(Player player: players){
                 executorService.execute(() -> {
-                    synchronized (actions){
-                        try {
-                            player.turn(actions.get(0));
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-                        actions.remove(actions.get(0));
-                        actions.notifyAll();
+                    System.out.println("\n" + player.toString() + "Picking a card to discard");
+                    int number = pickCard(player);
+                    try {
+                        player.turn(number);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
                     }
                 });
             }
             executorService.shutdown();
 
-            System.out.println("Running round\r");
-            while (!executorService.isTerminated()){
-                System.out.print("#");
-            }
-            System.out.println('\n');
+            while (!executorService.isTerminated()){}
         }
         System.out.println(winPlayer.getName() + " has won!");
         System.out.println(winPlayer.toString());
+    }
+
+    /**
+     * Picks an index from the players hand to be discarded
+     * @param player to have card picked
+     * @return index of card from players hand to be discarded
+     * */
+    public static int pickCard(Player player){
+        int number = player.getNumber();
+        ArrayList<Integer> handIndex = new ArrayList<>();
+        for(Card card: player.getHand()){
+            if(card.getFaceValue() != number){
+                handIndex.add(player.getHand().indexOf(card));
+            }
+        }
+        Random random = new Random();
+        return handIndex.get(random.nextInt(handIndex.size()));
     }
 
     /**
@@ -135,7 +135,7 @@ public class Main {
     private static void setupGame(int numPlayers){
         for (int i=1; i < numPlayers+1; i++){
             String name = "Player " + i;
-            players.add(new Player(name));
+            players.add(new Player(name, i));
             decks.add(new Deck());
         }
         setupHands();
