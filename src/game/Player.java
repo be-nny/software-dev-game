@@ -12,6 +12,7 @@ import static game.Main.decks;
 public class Player {
 
     private String name;
+    private int number;
     private int drawDeckPointer;
     private int discardDeckPointer;
     private ArrayList<Card> hand = new ArrayList<>();
@@ -19,9 +20,11 @@ public class Player {
 
     /**
      * @param name name of the player
+     * @param number players associated number
      * */
-    public Player(String name){
+    public Player(String name, int number){
         this.name = name;
+        this.number = number;
         this.outputFilePath = this.name + "_output.txt";
     }
 
@@ -66,6 +69,10 @@ public class Player {
 
     public ArrayList<Card> getHand(){
         return this.hand;
+    }
+
+    public int getNumber(){
+        return this.number;
     }
 
     public String getName(){
