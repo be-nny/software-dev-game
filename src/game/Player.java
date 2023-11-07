@@ -30,7 +30,7 @@ public class Player {
 
     public void write(String line) throws IOException {
         File file = new File(this.outputFilePath);
-        FileWriter writer = new FileWriter(file);
+        FileWriter writer = new FileWriter(file, true);
         writer.write("\n"+line);
         writer.close();
     }
@@ -58,13 +58,27 @@ public class Player {
         this.discardDeckPointer = pointer;
     }
 
+    public String initialise() throws IOException {
+        File file = new File(this.outputFilePath);
+        FileWriter writer = new FileWriter(file);
+        writer.write("");
+        writer.close();
+        String strHand = "";
+        for (Card card: this.hand){
+            strHand += card.getFaceValue() + " ";
+        }
+        String outputLine = this.name + ": initial hand " + strHand;
+        this.write(outputLine);
+        return outputLine;
+    }
+
     @Override
     public String toString(){
         String strHand = "";
         for (Card card: this.hand){
             strHand += card.getFaceValue() + " ";
         }
-        return this.name + "'s hand: " + strHand;
+        return strHand;
     }
 
     public ArrayList<Card> getHand(){
@@ -82,8 +96,16 @@ public class Player {
     public synchronized void turn(int discardChoice) throws InterruptedException {
         Card discardCard = this.hand.get(discardChoice);
         this.hand.remove(discardCard);
-        decks.get(discardDeckPointer).discard(discardCard);
-        this.hand.add(decks.get(drawDeckPointer).draw());
+        decks.get(this.discardDeckPointer).discard(discardCard);
+        Card drawCard = decks.get(this.drawDeckPointer).draw();
+        this.hand.add(drawCard);
+        try {
+            this.write(this.name+" draws a "+drawCard.getFaceValue()+" from deck "+this.drawDeckPointer);
+            this.write(this.name+" discards a "+discardCard.getFaceValue()+" from deck "+ this.discardDeckPointer);
+            this.write (this.name+" current hand is "+this);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         notifyAll();
     }
 }
