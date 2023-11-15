@@ -20,7 +20,7 @@ public class DeckTest {
 
     @BeforeEach
     public void setUp(){
-        deck = new Deck();
+        deck = new Deck(1);
         deck.addCard(card1);
         deck.addCard(card2);
         deck.addCard(card3);

@@ -1,5 +1,8 @@
 package game;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
@@ -12,7 +15,7 @@ public class Deck extends Writer {
     /**
      * When created, the deck object needs to be filled with a {@link Pack game.Pack} object.
      * */
-    public Deck(int number){
+    public Deck(int number) {
         this.name = "deck" + number;
         this.deckOutputFile = this.name + "_output.txt";
     }
@@ -25,6 +28,14 @@ public class Deck extends Writer {
         return this.name;
     }
 
+    @Override
+    public String toString(){
+        String deckStr = "";
+        for(Card card: this.deck){
+            deckStr += card.getFaceValue() + " ";
+        }
+        return deckStr;
+    }
     /**
      * This appends a card to the deck. This doesn't add it to the bottom. This is used when filling the deck from a
      * {@link Pack game.Pack}.
@@ -41,9 +52,10 @@ public class Deck extends Writer {
      * */
     public Card draw() {
         Card card;
-        synchronized (this.deck){
+        synchronized (this){
             card = this.deck.get(this.deck.size()-1);
-            this.deck.notifyAll();
+            this.deck.remove(card);
+            this.notifyAll();
         }
         return card;
     }
@@ -53,9 +65,19 @@ public class Deck extends Writer {
      * @implNote This is thread safe
      * */
     public void discard(Card card) {
-        synchronized (this.deck){
+        synchronized (this){
             this.deck.add(0, card);
-            this.deck.notifyAll();
+            this.notifyAll();
         }
+    }
+
+    @Override
+    public String initialise() throws IOException {
+        File file = new File(this.deckOutputFile);
+        FileWriter writer = new FileWriter(file);
+
+        writer.write("");
+        writer.close();
+        return null;
     }
 }
