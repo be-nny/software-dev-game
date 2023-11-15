@@ -10,7 +10,6 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class Main {
     private static ArrayList<Player> players = new ArrayList<>();
@@ -21,8 +20,6 @@ public class Main {
     private static final int handSize = 4;
 
     private static Player winPlayer;
-
-    static ReentrantLock lock = new ReentrantLock();
 
     public static void main(String[] args) throws InterruptedException {
         System.out.println("Enter number of players...");
@@ -59,7 +56,7 @@ public class Main {
             System.out.println("-- NEW ROUND --");
             for(Player player: players){
                 executorService.execute(() -> {
-                    System.out.println(player.getName() + " hand "+ player.toString());
+                    System.out.println(player.getName() + " hand "+ player);
                     int number = pickCard(player);
                     try {
                         player.turn(number);
@@ -73,20 +70,32 @@ public class Main {
             while (!executorService.isTerminated()){}
         }
         System.out.println("\n-- FINAL HANDS --");
-        for(Player player: players){
-            if (player == winPlayer){
-                player.write(player.getName()+" wins");
-                player.write((player.getName()+" exits"));
-                player.write(player.getName()+" final hand "+player);
-            }else{
-                player.write(winPlayer.getName()+" has informed "+player.getName()+" that "+winPlayer.getName()+" has won");
-                player.write((player.getName()+" exits"));
-                player.write(player.getName()+" final hand "+player);
-            }
-
+        try{
+            writeToFiles();
+        } catch (IOException e){
+            System.out.println("Error when writing to files" + e.getMessage());
         }
         System.out.println("\n" + winPlayer.getName() + " has won!");
         System.out.println(winPlayer.toString());
+    }
+
+    private static void writeToFiles() throws IOException {
+        for(Player player: players){
+            System.out.println(player.getName() + " hand "+ player);
+            if (player == winPlayer){
+                player.write("\n" + player.getName()+" wins", player.getOutputFilePath());
+                player.write(("\n" + player.getName()+" exits"), player.getOutputFilePath());
+                player.write("\n" + player.getName()+" final hand "+player, player.getOutputFilePath());
+            }else{
+                player.write("\n" + winPlayer.getName() + " has informed " + player.getName() + " that " + winPlayer.getName() + " has won", player.getOutputFilePath());
+                player.write("\n" + player.getName() + " exits", player.getOutputFilePath());
+                player.write("\n" + player.getName() + " final hand " + player, player.getOutputFilePath());
+            }
+        }
+
+        for(Deck deck: decks){
+
+        }
     }
 
     /**
@@ -154,14 +163,13 @@ public class Main {
         for (int i=1; i < numPlayers+1; i++){
             String name = "Player " + i;
             players.add(new Player(name, i));
-            decks.add(new Deck());
+            decks.add(new Deck(i));
         }
         setupHands();
         setupDecks();
 
         // assigning discard and draw decks to players
         for (int i = 0; i < decks.size(); i++) {
-            ;
             int discard;
             if (i + 1 < decks.size()) {
                 discard = i + 1;

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import static game.Main.decks;
 
-public class Player {
+public class Player extends Writer{
 
     private String name;
     private int number;
@@ -28,12 +28,6 @@ public class Player {
         this.outputFilePath = this.name + "_output.txt";
     }
 
-    public void write(String line) throws IOException {
-        File file = new File(this.outputFilePath);
-        FileWriter writer = new FileWriter(file, true);
-        writer.write("\n"+line);
-        writer.close();
-    }
     /**
      * Adds a card to the players hand
      * @param card the card to be added to the players hand
@@ -59,16 +53,14 @@ public class Player {
     }
 
     public String initialise() throws IOException {
-        File file = new File(this.outputFilePath);
-        FileWriter writer = new FileWriter(file);
-        writer.write("");
-        writer.close();
+        this.write("", outputFilePath);
+
         String strHand = "";
         for (Card card: this.hand){
             strHand += card.getFaceValue() + " ";
         }
-        String outputLine = this.name + ": initial hand " + strHand;
-        this.write(outputLine);
+        String outputLine = "\n" + this.name + ": initial hand " + strHand;
+        this.write(outputLine, this.outputFilePath);
         return outputLine;
     }
 
@@ -93,6 +85,10 @@ public class Player {
         return this.name;
     }
 
+    public String getOutputFilePath(){
+        return this.outputFilePath;
+    }
+
     public synchronized void turn(int discardChoice) throws InterruptedException {
         Card discardCard = this.hand.get(discardChoice);
         this.hand.remove(discardCard);
@@ -100,9 +96,9 @@ public class Player {
         Card drawCard = decks.get(this.drawDeckPointer).draw();
         this.hand.add(drawCard);
         try {
-            this.write(this.name+" draws a "+drawCard.getFaceValue()+" from deck "+this.drawDeckPointer + 1);
-            this.write(this.name+" discards a "+discardCard.getFaceValue()+" from deck "+ this.discardDeckPointer + 1);
-            this.write (this.name+" current hand is "+this);
+            this.write("\n" + this.name+" draws a "+drawCard.getFaceValue()+" from deck "+(this.drawDeckPointer + 1), this.outputFilePath);
+            this.write("\n" + this.name+" discards a "+discardCard.getFaceValue()+" from deck "+(this.discardDeckPointer + 1), this.outputFilePath);
+            this.write ("\n" + this.name+" current hand is "+this, this.outputFilePath);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
