@@ -12,4 +12,6 @@ public abstract class Writer {
         writer.write(line);
         writer.close();
     }
+
+    public abstract String initialise() throws IOException;
 }

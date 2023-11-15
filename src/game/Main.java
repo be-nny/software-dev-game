@@ -12,7 +12,7 @@ public class Main {
     private static ArrayList<Player> players = new ArrayList<>();
     private static int numPlayers;
     private static ExecutorService executorService;
-    public static volatile ArrayList<Deck> decks = new ArrayList<>();
+    public static final ArrayList<Deck> decks = new ArrayList<>();
     private static Pack pack;
     private static final int handSize = 4;
 
@@ -101,7 +101,7 @@ public class Main {
         }
 
         for(Deck deck: decks){
-
+            deck.write("\n" + deck.getName() + " contents: " + deck, deck.getDeckOutputFile());
         }
     }
 
@@ -139,6 +139,11 @@ public class Main {
     private static void setupDecks() {
         while (pack.getCards().size() > 0) {
             for (Deck deck : decks) {
+                try {
+                    deck.initialise();
+                } catch (IOException e) {
+                    System.out.println("error when writing to text file: " + e.getMessage());
+                }
                 deck.addCard(pack.getTopCard());
             }
         }
