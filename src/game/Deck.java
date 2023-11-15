@@ -20,10 +20,17 @@ public class Deck extends Writer {
         this.deckOutputFile = this.name + "_output.txt";
     }
 
+    /**
+     * Will return the Deck text string
+     * @return the output string for the current deck
+     * */
     public String getDeckOutputFile(){
         return this.deckOutputFile;
     }
-
+    /**
+     * Will return the deck corresponding with the appropriate player
+     * @return name attribute from the deck
+     * */
     public String getName(){
         return this.name;
     }
@@ -62,6 +69,7 @@ public class Deck extends Writer {
 
     /**
      * Adds a card to the bottom of the deck.
+     * @param card the card to get discarded to the discard deck
      * @implNote This is thread safe
      * */
     public void discard(Card card) {
@@ -71,6 +79,12 @@ public class Deck extends Writer {
         }
     }
 
+
+    /**
+     * Creates the output text file for this deck
+     * @throws @IOException
+     * @return null value
+     * */
     @Override
     public String initialise() throws IOException {
         File file = new File(this.deckOutputFile);

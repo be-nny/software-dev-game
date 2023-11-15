@@ -86,6 +86,9 @@ public class Main {
         System.out.println(winPlayer.toString());
     }
 
+    /**
+     *  Writes the relevant information to both the player and deck output files
+     * */
     private static void writeToFiles() throws IOException {
         for(Player player: players){
             System.out.println(player.getName() + " hand "+ player);
@@ -195,6 +198,11 @@ public class Main {
         }
     }
 
+    /**
+     * Checks if a player has won the game
+     * @return True if the player has won
+     * @return False if they have not
+     * */
     private static boolean isWin() {
         for (Player player : players) {
             List<Integer> valueList = new ArrayList<>();
