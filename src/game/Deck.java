@@ -4,13 +4,26 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Deck {
+public class Deck extends Writer {
     private volatile ArrayList<Card> deck = new ArrayList<>();
+    private final String deckOutputFile;
+    private final String name;
 
     /**
      * When created, the deck object needs to be filled with a {@link Pack game.Pack} object.
      * */
-    public Deck(){}
+    public Deck(int number){
+        this.name = "deck" + number;
+        this.deckOutputFile = this.name + "_output.txt";
+    }
+
+    public String getDeckOutputFile(){
+        return this.deckOutputFile;
+    }
+
+    public String getName(){
+        return this.name;
+    }
 
     /**
      * This appends a card to the deck. This doesn't add it to the bottom. This is used when filling the deck from a
