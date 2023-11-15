@@ -4,10 +4,7 @@ import exceptions.InvalidPackException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantLock;
@@ -25,11 +22,21 @@ public class Main {
     static ReentrantLock lock = new ReentrantLock();
 
     public static void main(String[] args) throws InterruptedException {
-        System.out.println("Enter number of players...");
-        Scanner myScanner = new Scanner(System.in);
-        numPlayers = myScanner.nextInt();
-        myScanner = new Scanner(System.in);
+        boolean isValidNumber = false;
 
+        System.out.println("Enter number of players...");
+        Scanner myScanner;
+        while (!isValidNumber) {
+            try {
+                myScanner = new Scanner (System.in);
+                numPlayers = myScanner.nextInt();
+                isValidNumber = true;
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter a valid number");
+            }
+        }
+
+        myScanner = new Scanner(System.in);
         System.out.println("Enter location of pack...");
         String packLocation = myScanner.nextLine();
         boolean isValidPack = setupPack(packLocation, numPlayers);
