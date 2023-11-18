@@ -31,17 +31,20 @@ public class Pack {
     }
 
     /**
-     * Method checks the pack text file if its valid or not.
+     * Method checks the pack text file if it's valid or not.
      * @return boolean depending on if the pack is valid
-     * @throws FileNotFoundException whne the path to the pack file cannot be found
+     * @throws FileNotFoundException when the path to the pack file cannot be found
      * */
     private boolean isValidPack() throws FileNotFoundException {
         File myObj = new File(this.packLocation);
         Scanner myReader = new Scanner(myObj);
         int count = 0;
+        String line;
         while (myReader.hasNextLine()){
-            count++;
-            myReader.nextLine();
+            line = myReader.nextLine();
+            if(!line.equals("")){
+                count++;
+            }
         }
         myReader.close();
         return count == 8 * this.numberPlayers;
