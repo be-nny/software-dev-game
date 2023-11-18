@@ -1,9 +1,10 @@
 package test;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import org.junit.platform.suite.api.*;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({CardTest.class, DeckTest.class, PackTest.class, PlayerTest.class})
+
+@Suite
+@SelectPackages("test")
 public class TestSuite {
+
 }

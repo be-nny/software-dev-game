@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class Deck extends Writer {
     private volatile ArrayList<Card> deck = new ArrayList<>();
@@ -20,12 +18,14 @@ public class Deck extends Writer {
         this.deckOutputFile = this.name + "_output.txt";
     }
 
-    public String getDeckOutputFile(){
-        return this.deckOutputFile;
-    }
+    @Override
+    public String initialise() throws IOException {
+        File file = new File(this.deckOutputFile);
+        FileWriter writer = new FileWriter(file);
 
-    public String getName(){
-        return this.name;
+        writer.write("");
+        writer.close();
+        return null;
     }
 
     @Override
@@ -36,6 +36,22 @@ public class Deck extends Writer {
         }
         return deckStr;
     }
+
+    /**
+     * @return file name for the deck
+     * */
+    public String getDeckOutputFile(){
+        return this.deckOutputFile;
+    }
+
+    /**
+     * Deck names are in the format 'deckn' where n is a positive integer
+     * @return the name of the deck
+     * */
+    public String getName(){
+        return this.name;
+    }
+
     /**
      * This appends a card to the deck. This doesn't add it to the bottom. This is used when filling the deck from a
      * {@link Pack game.Pack}.
@@ -50,12 +66,14 @@ public class Deck extends Writer {
      * @return game.Card object drawn from the top of the deck
      * @implNote This is thread safe
      * */
-    public Card draw() {
-        Card card;
-        synchronized (this){
+    public synchronized Card draw() throws InterruptedException {
+        Card card = null;
+        if (this.deck.size() > 0){
             card = this.deck.get(this.deck.size()-1);
             this.deck.remove(card);
             this.notifyAll();
+        } else {
+            this.wait(500);
         }
         return card;
     }
@@ -64,20 +82,8 @@ public class Deck extends Writer {
      * Adds a card to the bottom of the deck.
      * @implNote This is thread safe
      * */
-    public void discard(Card card) {
-        synchronized (this){
-            this.deck.add(0, card);
-            this.notifyAll();
-        }
-    }
-
-    @Override
-    public String initialise() throws IOException {
-        File file = new File(this.deckOutputFile);
-        FileWriter writer = new FileWriter(file);
-
-        writer.write("");
-        writer.close();
-        return null;
+    public synchronized void discard(Card card) throws InterruptedException {
+        this.deck.add(0, card);
+        this.notifyAll();
     }
 }
