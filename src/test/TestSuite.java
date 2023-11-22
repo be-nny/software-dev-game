@@ -1,10 +1,12 @@
 package test;
 
-import org.junit.platform.suite.api.*;
-
-
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 @Suite
-@SelectPackages("test")
-public class TestSuite {
-
-}
+@SelectClasses({
+        CardTest.class,
+        DeckTest.class,
+        PackTest.class,
+        PlayerTest.class
+})
+public class TestSuite { }
