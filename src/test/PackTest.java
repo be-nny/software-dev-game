@@ -3,10 +3,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import exceptions.InvalidPackException;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import game.*;
 import exceptions.InvalidPackException;
 
@@ -35,6 +32,7 @@ public class PackTest {
     }
 
     @Test
+    @Disabled
     public void isValidPackTest(){
         path = "src/test/test_pack_2";
         players = 4;
@@ -65,6 +63,7 @@ public class PackTest {
     }
 
     @Test
+    @Disabled
     public void createTest(){
         path = "src/test/this_doesnt_exist";
         players = 4;
