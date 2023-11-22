@@ -82,7 +82,7 @@ public class Deck extends Writer {
      * Adds a card to the bottom of the deck.
      * @implNote This is thread safe
      * */
-    public synchronized void discard(Card card) throws InterruptedException {
+    public synchronized void discard(Card card) {
         this.deck.add(0, card);
         this.notifyAll();
     }
