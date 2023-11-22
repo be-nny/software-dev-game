@@ -1,16 +1,14 @@
 package test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import exceptions.InvalidPackException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import game.*;
-import exceptions.InvalidPackException;
 
 import java.io.FileNotFoundException;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PackTest {
 
@@ -27,15 +25,13 @@ public class PackTest {
     public void getCardsTest(){
         assertEquals(pack.getCards().size(), 32);
     }
-
     @Test
     public void getTopCardTest(){
         assertEquals(pack.getCards().peek().getFaceValue(), 5);
         assertEquals(pack.getTopCard().getFaceValue(), 5);
     }
-
     @Test
-    public void isValidPackTest(){
+    public void notEnoughLinesTest(){
         path = "src/test/test_pack_2";
         players = 4;
         InvalidPackException packExceptionThrown = assertThrows(
@@ -44,28 +40,20 @@ public class PackTest {
                 "Expected setUp to thrown InvalidPackException didnt"
         );
         assertEquals("game.Pack file doesn't have enough lines!", packExceptionThrown.getMessage());
-
+    }
+    @Test
+    public void invalidPlayerInputTest(){
         path = "src/test/test_pack_1";
         players = 3;
-        packExceptionThrown = assertThrows(
+        InvalidPackException packExceptionThrown = assertThrows(
                 InvalidPackException.class,
                 PackTest::setUp,
                 "Expected setUp to thrown InvalidPackException didnt"
         );
         assertEquals("game.Pack file doesn't have enough lines!", packExceptionThrown.getMessage());
-
-        path = "src/test/this_doesnt_exist";
-        players = 4;
-        FileNotFoundException fileNotFoundThrown = assertThrows(
-                FileNotFoundException.class,
-                PackTest::setUp,
-                "Expected setUp to thrown InvalidPackException didnt"
-        );
-        Assertions.assertTrue(fileNotFoundThrown.getMessage().contains("(No such file or directory)"));
     }
-
     @Test
-    public void createTest(){
+    public void invalidFileTest(){
         path = "src/test/this_doesnt_exist";
         players = 4;
         FileNotFoundException fileNotFoundThrown = assertThrows(
