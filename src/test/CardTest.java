@@ -1,11 +1,11 @@
 package test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import game.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import game.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CardTest {
-
     private static Card card1;
     private static Card card2;
     private static Card card3;

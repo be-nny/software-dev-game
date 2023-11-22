@@ -7,8 +7,6 @@ import game.*;
 
 public class DeckTest {
     private static Deck deck;
-
-
     public static Card card1= new Card (1);
     public static Card card2= new Card (2);
     public static Card card3= new Card (3);
