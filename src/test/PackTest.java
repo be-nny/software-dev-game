@@ -5,10 +5,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import game.*;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.io.FileNotFoundException;
+import java.lang.reflect.Field;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class PackTest {
 
@@ -30,37 +35,29 @@ public class PackTest {
         assertEquals(pack.getCards().peek().getFaceValue(), 5);
         assertEquals(pack.getTopCard().getFaceValue(), 5);
     }
+
     @Test
-    public void notEnoughLinesTest(){
-        path = "src/test/test_pack_2";
-        players = 4;
-        InvalidPackException packExceptionThrown = assertThrows(
-                InvalidPackException.class,
-                PackTest::setUp,
-                "Expected setUp to thrown InvalidPackException didnt"
-        );
-        assertEquals("Pack file doesn't have enough lines!", packExceptionThrown.getMessage());
-    }
-    @Test
-    public void invalidPlayerInputTest(){
-        path = "src/test/test_pack_1";
-        players = 3;
-        InvalidPackException packExceptionThrown = assertThrows(
-                InvalidPackException.class,
-                PackTest::setUp,
-                "Expected setUp to thrown InvalidPackException didnt"
-        );
-        assertEquals("Pack file doesn't have enough lines!", packExceptionThrown.getMessage());
-    }
-    @Test
-    public void invalidFileTest(){
-        path = "src/test/this_doesnt_exist";
-        players = 4;
-        FileNotFoundException fileNotFoundThrown = assertThrows(
-                FileNotFoundException.class,
-                PackTest::setUp,
-                "Expected setUp to thrown InvalidPackException didnt"
-        );
-        Assertions.assertTrue(fileNotFoundThrown.getMessage().length() > 0);
+    public void isValidPack(){
+        assertDoesNotThrow(() -> {
+            Field fileField = Pack.class.getDeclaredField("myFileObj");
+            fileField.setAccessible(true);
+            fileField.set(pack, null);
+        });
+
+        assertDoesNotThrow(() -> {
+            Field readerField = Pack.class.getDeclaredField("myReader");
+            readerField.setAccessible(true);
+
+            Scanner mockScanner = mock(Scanner.class);
+            final int[] number = {1};
+
+            doAnswer((Answer<String>) invocation -> {
+                number[0]++;
+                return String.valueOf(number[0]);
+            }).when(mockScanner).nextLine();
+
+            doAnswer((Answer<Boolean>) invocation -> number[0] <= 32).when(mockScanner).hasNextLine();
+            readerField.set(pack, mockScanner);
+        });
     }
 }

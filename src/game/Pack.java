@@ -11,6 +11,8 @@ public class Pack {
     private String packLocation;
     private int numberPlayers;
     private Stack<Card> cards = new Stack<>();
+    private File myFileObj;
+    private Scanner myReader;
 
     /**
      * This creates a pack object filled with cards generated from a text file containing the face values. This should
@@ -36,17 +38,17 @@ public class Pack {
      * @throws FileNotFoundException when the path to the pack file cannot be found
      * */
     private boolean isValidPack() throws FileNotFoundException {
-        File myObj = new File(this.packLocation);
-        Scanner myReader = new Scanner(myObj);
+        this.myFileObj = new File(this.packLocation);
+        this.myReader = new Scanner(this.myFileObj);
         int count = 0;
         String line;
-        while (myReader.hasNextLine()){
-            line = myReader.nextLine();
+        while (this.myReader.hasNextLine()){
+            line = this.myReader.nextLine();
             if(!line.equals("")){
                 count++;
             }
         }
-        myReader.close();
+        this.myReader.close();
         return count == 8 * this.numberPlayers;
     }
 
@@ -55,15 +57,15 @@ public class Pack {
      * @throws FileNotFoundException if the path to the pack text file cannot be found
      * */
     private void create() throws FileNotFoundException {
-        File myObj = new File(this.packLocation);
-        Scanner myReader = new Scanner(myObj);
+        this.myFileObj = new File(this.packLocation);
+        this.myReader = new Scanner(this.myFileObj);
 
-        while (myReader.hasNextLine()){
-            int cardValue = myReader.nextInt();
+        while (this.myReader.hasNextLine()){
+            int cardValue = this.myReader.nextInt();
             Card card = new Card(cardValue);
             this.cards.push(card);
         }
-        myReader.close();
+        this.myReader.close();
     }
 
     /**
