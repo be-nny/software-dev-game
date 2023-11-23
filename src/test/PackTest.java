@@ -8,8 +8,10 @@ import game.*;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,29 +37,48 @@ public class PackTest {
         assertEquals(pack.getCards().peek().getFaceValue(), 5);
         assertEquals(pack.getTopCard().getFaceValue(), 5);
     }
-
     @Test
     public void isValidPack(){
+        String methodName = "isValidPack";
+
+        File file = new File("src/test/test_pack_1");
+        Object[] args = new Object[]{file};
+        Class<File> argClass = File.class;
+
         assertDoesNotThrow(() -> {
-            Field fileField = Pack.class.getDeclaredField("myFileObj");
-            fileField.setAccessible(true);
-            fileField.set(pack, null);
+            Method packIsValid = Pack.class.getDeclaredMethod(methodName, argClass);
+            packIsValid.setAccessible(true);
+            boolean result = (boolean) packIsValid.invoke(pack, args);
+            assertTrue(result);
         });
+    }
+    @Test
+    public void isInvalidPack(){
+        String methodName = "isValidPack";
+
+        File file = new File("src/test/test_pack_2");
+        Object[] args = new Object[]{file};
+        Class<File> argClass = File.class;
 
         assertDoesNotThrow(() -> {
-            Field readerField = Pack.class.getDeclaredField("myReader");
-            readerField.setAccessible(true);
+            Method packIsValid = Pack.class.getDeclaredMethod(methodName, argClass);
+            packIsValid.setAccessible(true);
+            boolean result = (boolean) packIsValid.invoke(pack, args);
+            assertFalse(result);
+        });
+    }
+    @Test
+    public void createPackTest(){
+        String methodName = "create";
 
-            Scanner mockScanner = mock(Scanner.class);
-            final int[] number = {1};
+        File file = new File("src/test/test_pack_1");
+        Object[] args = new Object[]{file};
+        Class<File> argClass = File.class;
 
-            doAnswer((Answer<String>) invocation -> {
-                number[0]++;
-                return String.valueOf(number[0]);
-            }).when(mockScanner).nextLine();
-
-            doAnswer((Answer<Boolean>) invocation -> number[0] <= 32).when(mockScanner).hasNextLine();
-            readerField.set(pack, mockScanner);
+        assertDoesNotThrow(() -> {
+            Method createPack = Pack.class.getDeclaredMethod(methodName, argClass);
+            createPack.setAccessible(true);
+            createPack.invoke(pack, args);
         });
     }
 }
