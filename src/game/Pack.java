@@ -11,8 +11,6 @@ public class Pack {
     private String packLocation;
     private int numberPlayers;
     private Stack<Card> cards = new Stack<>();
-    private File myFileObj;
-    private Scanner myReader;
 
     /**
      * This creates a pack object filled with cards generated from a text file containing the face values. This should
@@ -25,10 +23,11 @@ public class Pack {
     public Pack(String packLocation, int numberPlayers) throws FileNotFoundException, InvalidPackException {
         this.packLocation = packLocation;
         this.numberPlayers = numberPlayers;
-        if (!isValidPack()) {
+        File file = new File(this.packLocation);
+        if (!isValidPack(file)) {
             throw new InvalidPackException("Pack file doesn't have enough lines!");
         } else{
-            this.create();
+            this.create(file);
         }
     }
 
@@ -37,18 +36,17 @@ public class Pack {
      * @return boolean depending on if the pack is valid
      * @throws FileNotFoundException when the path to the pack file cannot be found
      * */
-    private boolean isValidPack() throws FileNotFoundException {
-        this.myFileObj = new File(this.packLocation);
-        this.myReader = new Scanner(this.myFileObj);
+    private boolean isValidPack(File fileObj) throws FileNotFoundException {
+        Scanner myReader = new Scanner(fileObj);
         int count = 0;
         String line;
-        while (this.myReader.hasNextLine()){
-            line = this.myReader.nextLine();
+        while (myReader.hasNextLine()){
+            line = myReader.nextLine();
             if(!line.equals("")){
                 count++;
             }
         }
-        this.myReader.close();
+        myReader.close();
         return count == 8 * this.numberPlayers;
     }
 
@@ -56,16 +54,15 @@ public class Pack {
      * Once the pack is deemed valid, the pack is filled with cards generated from the pack text file.
      * @throws FileNotFoundException if the path to the pack text file cannot be found
      * */
-    private void create() throws FileNotFoundException {
-        this.myFileObj = new File(this.packLocation);
-        this.myReader = new Scanner(this.myFileObj);
+    private void create(File fileObj) throws FileNotFoundException {
+        Scanner myReader = new Scanner(fileObj);
 
-        while (this.myReader.hasNextLine()){
-            int cardValue = this.myReader.nextInt();
+        while (myReader.hasNextLine()){
+            int cardValue = myReader.nextInt();
             Card card = new Card(cardValue);
             this.cards.push(card);
         }
-        this.myReader.close();
+        myReader.close();
     }
 
     /**
