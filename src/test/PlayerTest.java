@@ -1,5 +1,4 @@
 package test;
-import static game.CardGame.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -119,5 +118,50 @@ public class PlayerTest {
             int result = (int) playerTurnMethod.invoke(player);
             assertEquals(3, result);
         });
+    }
+    @Test
+    public void isWinTest() throws NoSuchFieldException {
+        String methodName = "isWin";
+
+        Field handField = Player.class.getDeclaredField("hand");
+        handField.setAccessible(true);
+
+        player = new Player("Player1", 1);
+        for (int i = 1; i<5; i++){
+            Card card = mock(Card.class);
+            when(card.getFaceValue()).thenReturn(1);
+            player.addCard(card);
+        }
+
+        assertDoesNotThrow(() -> {
+            Method playerIsWinMethod = Player.class.getDeclaredMethod(methodName);
+            playerIsWinMethod.setAccessible(true);
+
+            playerIsWinMethod.invoke(player);
+            boolean result = (boolean) playerIsWinMethod.invoke(player);
+            assertTrue(result);
+        });
+    }
+
+    @Test
+    public void notifyWinListenerTest() throws NoSuchFieldException, IllegalAccessException{
+        String methodName = "notifyWinListener";
+
+        Field listenersField = Player.class.getDeclaredField("listeners");
+        listenersField.setAccessible(true);
+
+        ArrayList<WinListener> listeners = new ArrayList<>();
+        WinListener mockListener1 = mock(WinListener.class);
+        listeners.add(mockListener1);
+        listenersField.set(player, listeners);
+
+        assertDoesNotThrow(() -> {
+            Method playerNotifyTest = Player.class.getDeclaredMethod(methodName);
+            playerNotifyTest.setAccessible(true);
+
+            playerNotifyTest.invoke(player);
+            verify(mockListener1).notifyPlayerWon(player);
+        });
+
     }
 }
