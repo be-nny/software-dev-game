@@ -165,7 +165,6 @@ public class Player extends Writer implements Runnable{
             Card drawCard = decks.get(this.drawDeckPointer).draw();
             if(drawCard != null){
                 this.hand.add(drawCard);
-
                 // discarding a card
                 Card discardCard = this.hand.get(discardChoice);
                 this.hand.remove(discardCard);
