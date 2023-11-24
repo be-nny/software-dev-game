@@ -3,7 +3,7 @@ import game.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CardTest {
     private static Card card1;
@@ -21,5 +21,12 @@ public class CardTest {
         assertEquals(card1.getFaceValue(), 14);
         assertEquals(card2.getFaceValue(), 1);
         assertEquals(card3.getFaceValue(), 50);
+    }
+    @Test
+    public void invalidFaceValidTest(){
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            new Card(-1);
+        });
+        assertTrue(exception.getMessage().contains("Face value must be greater than 0."));
     }
 }
