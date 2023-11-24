@@ -27,8 +27,7 @@ public class PlayerTest {
         }
         player = new Player("Player1", 1);
         for (int i = 1; i<5; i++){
-            Card card = mock(Card.class);
-            when(card.getFaceValue()).thenReturn(i);
+            Card card = spy(new Card(i));
             player.addCard(card);
         }
     }
@@ -63,26 +62,18 @@ public class PlayerTest {
         // info for the turn method
         Class<Integer> parameterType = int.class;
         String methodName = "turn";
-        Object[] args = new Object[]{0};
+        Object[] args = new Object[]{3};
 
         // setting the decks
-        Deck drawDeck = mock(Deck.class);
-        Deck discardDeck = mock(Deck.class);
-        Card drawCard = mock(Card.class);
-
-        when(drawCard.getFaceValue()).thenReturn(1);
-        assertDoesNotThrow(() -> {
-            when(drawDeck.draw()).thenReturn(drawCard);
-        });
+        Deck drawDeck = spy(new Deck(1));
+        Deck discardDeck = spy(new Deck(2));
 
         // adding mock cards to the mock discard and draw decks
         for(int i = 1; i < 6; i ++){
-            Card c1 = mock(Card.class);
-            Card c2 = mock(Card.class);
-            when(c1.getFaceValue()).thenReturn(i);
-            when(c2.getFaceValue()).thenReturn(i + 1);
+            Card c1 = spy(new Card(i));
+            Card c2 = spy(new Card(i + 1));
             drawDeck.addCard(c1);
-            drawDeck.addCard(c2);
+            discardDeck.addCard(c2);
         }
 
         CardGame.decks.add(drawDeck);
@@ -96,6 +87,9 @@ public class PlayerTest {
             playerTurnMethod.setAccessible(true);
             playerTurnMethod.invoke(player, args);
         });
+
+        // the bottom card is 4
+        assertTrue(discardDeck.getDeck().get(0).getFaceValue() == 4);
     }
     @Test
     public void pickCardTest(){
