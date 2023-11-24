@@ -136,8 +136,6 @@ public class PlayerTest {
         assertDoesNotThrow(() -> {
             Method playerIsWinMethod = Player.class.getDeclaredMethod(methodName);
             playerIsWinMethod.setAccessible(true);
-
-            playerIsWinMethod.invoke(player);
             boolean result = (boolean) playerIsWinMethod.invoke(player);
             assertTrue(result);
         });
