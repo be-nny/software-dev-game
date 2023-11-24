@@ -90,6 +90,9 @@ public class PlayerTest {
 
         // the bottom card is 4
         assertTrue(discardDeck.getDeck().get(0).getFaceValue() == 4);
+        // the top card is still 6
+        assertTrue(discardDeck.getDeck().get(discardDeck.getDeck().size() -1).getFaceValue() == 6);
+
     }
     @Test
     public void pickCardTest(){
