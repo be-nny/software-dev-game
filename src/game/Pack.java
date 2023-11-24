@@ -20,12 +20,12 @@ public class Pack {
      * @throws FileNotFoundException when the path provided doesn't exist
      * @throws InvalidPackException when the pack provided is invalid
      * */
-    public Pack(String packLocation, int numberPlayers) throws FileNotFoundException, InvalidPackException {
+    public Pack(String packLocation, int numberPlayers) throws FileNotFoundException, InvalidPackException, IllegalArgumentException {
         this.packLocation = packLocation;
         this.numberPlayers = numberPlayers;
         File file = new File(this.packLocation);
         if (!isValidPack(file)) {
-            throw new InvalidPackException("Pack file doesn't have enough lines!");
+            throw new InvalidPackException("Pack file is not formatted correctly");
         } else{
             this.create(file);
         }
@@ -42,8 +42,10 @@ public class Pack {
         String line;
         while (myReader.hasNextLine()){
             line = myReader.nextLine();
-            if(!line.equals("")){
+            if(!line.equals("") && Integer.parseInt(line) > 0){
                 count++;
+            } else{
+                return false;
             }
         }
         myReader.close();
@@ -53,8 +55,9 @@ public class Pack {
     /**
      * Once the pack is deemed valid, the pack is filled with cards generated from the pack text file.
      * @throws FileNotFoundException if the path to the pack text file cannot be found
+     * @throws IllegalArgumentException if the face value is less than 0.
      * */
-    private void create(File fileObj) throws FileNotFoundException {
+    private void create(File fileObj) throws FileNotFoundException, IllegalArgumentException {
         Scanner myReader = new Scanner(fileObj);
 
         while (myReader.hasNextLine()){
