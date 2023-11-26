@@ -17,6 +17,8 @@ public class CardGame implements WinListener{
     private static final int handSize = 4;
     private static Player winPlayer;
     public CardGame() {
+        // getting user inputs to start the game
+        // validating pack and number of players
         boolean isValidNumber = false;
 
         System.out.println("Enter number of players...");
@@ -60,9 +62,9 @@ public class CardGame implements WinListener{
         }
         System.out.println("\n");
 
-        // starting the threads
-        for(Thread thread: threadPool){
-            thread.start();
+        // starting the player threads
+        for(Thread playerThread: threadPool){
+            playerThread.start();
         }
     }
 
@@ -70,6 +72,7 @@ public class CardGame implements WinListener{
      * Finishes the game and writes to the Deck and Player text files
      * */
     private void finish(){
+        // finish the game and write the deck and player contents
         try{
             writeToPlayerFiles();
             writeToDeckFiles();
@@ -188,7 +191,7 @@ public class CardGame implements WinListener{
 
     @Override
     public void notifyPlayerWon(Player player) {
-        // stopping all the other threads
+        // stopping all the other player threads
         for(Player p: players){
             p.stop();
         }
