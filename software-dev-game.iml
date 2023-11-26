@@ -23,10 +23,10 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" exported="" name="junit.platform.suite" level="project" />
-    <orderEntry type="library" exported="" name="junit" level="project" />
-    <orderEntry type="library" exported="" name="junit.jupiter" level="project" />
-    <orderEntry type="library" exported="" name="mockito.junit.jupiter" level="project" />
-    <orderEntry type="library" exported="" name="junit.platform.console.standalone" level="project" />
+    <orderEntry type="library" name="junit.platform.suite" level="project" />
+    <orderEntry type="library" name="junit" level="project" />
+    <orderEntry type="library" name="junit.jupiter" level="project" />
+    <orderEntry type="library" name="mockito.junit.jupiter" level="project" />
+    <orderEntry type="library" name="junit.platform.console.standalone" level="project" />
   </component>
 </module>
