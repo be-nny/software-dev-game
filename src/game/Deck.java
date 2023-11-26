@@ -18,6 +18,13 @@ public class Deck extends Writer {
         this.deckOutputFile = this.name + "_output.txt";
     }
 
+    /**
+     * @return an Array containing all the Card's in the deck.
+     * */
+    public ArrayList<Card> getDeck(){
+        return this.deck;
+    }
+
     @Override
     public String initialise() throws IOException {
         File file = new File(this.deckOutputFile);
