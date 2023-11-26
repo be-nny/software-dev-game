@@ -157,6 +157,5 @@ public class PlayerTest {
             playerNotifyTest.invoke(player);
             verify(mockListener1).notifyPlayerWon(player);
         });
-
     }
 }
