@@ -1,9 +1,12 @@
 package test;
 
+import org.junit.After;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import game.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -123,7 +126,7 @@ public class PlayerTest {
         Field handField = Player.class.getDeclaredField("hand");
         handField.setAccessible(true);
 
-        player = new Player("Player1", 1);
+        player = spy(new Player("Player", 1));
         for (int i = 1; i<5; i++){
             Card card = mock(Card.class);
             when(card.getFaceValue()).thenReturn(1);
@@ -157,5 +160,11 @@ public class PlayerTest {
             playerNotifyTest.invoke(player);
             verify(mockListener1).notifyPlayerWon(player);
         });
+    }
+
+    @AfterAll
+    public static void cleanUp(){
+        File file = new File("Player1_output.txt");
+        file.delete();
     }
 }
